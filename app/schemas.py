@@ -36,6 +36,18 @@ class UserCreate(BaseModel):
             }            
         }
 
+class UserLogin(BaseModel):
+    username: str
+    password: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "username": "testuser",
+                "password": "testpassword",                
+            }            
+        }
+
 class UserUpdate(BaseModel):
     user_id: str
 

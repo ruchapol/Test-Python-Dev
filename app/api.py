@@ -43,3 +43,14 @@ async def user_delete(id: int):
     return {
         "success": True
     }
+
+@router.post("/user/login")
+async def user_login(userLoginModel: UserLogin):
+    data = user_crud.get_by_username(userLoginModel.username)
+    if data['password'] != userLoginModel.password:
+        raise HTTPException(status_code=400, detail="Invalid password")
+    
+    return {
+        "data": data,
+        "accessToken": ""
+    }

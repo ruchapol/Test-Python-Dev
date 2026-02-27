@@ -20,7 +20,15 @@ class UserCrud:
         return id
 
     def get_by_id(self, id: int) -> UserModel:
-        return {}
+        if id not in self.db:
+            raise HTTPException(status_code=404, detail="User not found")
+        return self.db[id]
+    
+    def get_by_username(self, username: str) -> UserModel:
+        for id, user in self.db.items():
+            if user['username'] == username:
+                return user
+        raise HTTPException(status_code=404, detail="User not found")
 
     def get_list(self, searchModel: UserSearch) -> List[UserModel]:
         return self.db
