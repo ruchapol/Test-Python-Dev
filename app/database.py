@@ -1,6 +1,7 @@
 import sys
 from fastapi import HTTPException
-from .crud import  UserCrud
+from .crud import  BookingCrud, UserCrud
 
-# Instantiate CRUD classes with the MongoDB connection
+
 user_crud = UserCrud()
+booking_crud = BookingCrud()
