@@ -140,13 +140,8 @@ class BookingCrud:
     def get_list(self, searchModel: BookingSearch) -> List[BookingModel]:
         result = self.db
 
-        print("get_list: searchModel", searchModel)
-
-        print("get_list: result", result)
-
         if searchModel.user_id is not None:
             result = {id: booking for id, booking in result.items() if booking['user_id'] == searchModel.user_id} 
-            print("get_list: result", result)
         
         return list(result.values())
     

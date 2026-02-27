@@ -171,9 +171,7 @@ def get_current_user(token: str) -> UserModel:
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        print("token", token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print("token payload", payload)
         username = payload.get("username")
         if username is None:
             raise credentials_exception
