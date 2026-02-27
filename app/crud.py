@@ -61,14 +61,24 @@ class UserCrud:
          
         return list(self.db.values())
 
-    def update(self, id: int, update: UserUpdate):
+    def update(self, id: str, update: UserUpdate) -> UserModel:
         
         if id not in self.db:
             raise HTTPException(status_code=404, detail="User not found")
+        
+        old_data = self.db[id]
     
-        self.db[id] = update.dict()      
+        self.db[id] = UserModel(
+            id = old_data["id"],
+            username = old_data["username"],
+            password = old_data["password"],
+            is_admin = old_data["is_admin"],
+            create_at = old_data["create_at"],
+        ).model_dump()      
+    
+        self.db[id] = UserModel(**self.db[id], **update.dict()).model_dump()   
 
-        return id
+        return UserModel(**self.db[id])
 
     def delete(self, id: str):
         if id not in self.db:
@@ -124,7 +134,7 @@ class BookingCrud:
     def get_by_id(self, id: str) -> BookingModel:
         if id not in self.db:
             raise HTTPException(status_code=404, detail="Booking not found")
-        return self.db[id]
+        return BookingModel(**self.db[id])
     
 
     def get_list(self, searchModel: BookingSearch) -> List[BookingModel]:
@@ -144,14 +154,22 @@ class BookingCrud:
          
         return (self.db.values())
 
-    def update(self, id: int, update: BookingUpdate):
+    def update(self, id: str, update: BookingUpdate) -> BookingModel:
         
         if id not in self.db:
             raise HTTPException(status_code=404, detail="Booking not found")
+        
+        old_data = self.db[id]
     
-        self.db[id] = update.dict()      
+        self.db[id] = BookingModel(
+            id = old_data["id"],
+            user_id = old_data["user_id"],
+            time_slot_start = update.time_slot_start if update.time_slot_start is not None else old_data["time_slot_start"],
+            time_slot_end = update.time_slot_end if update.time_slot_end is not None else old_data["time_slot_end"],
+            create_at = old_data["create_at"],
+        ).model_dump()      
 
-        return id
+        return self.db[id]
 
     def delete(self, id: str):
         if id not in self.db:

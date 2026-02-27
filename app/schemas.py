@@ -86,6 +86,8 @@ class BookingCreate(BaseModel):
 
 class BookingUpdate(BaseModel):
 
+    time_slot_start: datetime
+    time_slot_end: datetime
     class Config:
         json_schema_extra = {
             "example": {

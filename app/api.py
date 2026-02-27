@@ -46,11 +46,11 @@ async def user_create(createModel: UserCreate):
     }
 
 @router.put("/user/{id}", tags=["user"])
-async def user_edit(updateModel: UserUpdate, id: int):
+async def user_edit(updateModel: UserUpdate, id: str):
     data = user_crud.update(id=id, update=updateModel)
     return {
         "success": True,
-        "data": data
+        "data": data.model_dump()
     }
 
 @router.delete("/user/{id}", tags=["user"])
@@ -92,8 +92,6 @@ async def user_login(userLoginModel: UserLogin):
 async def booking_list(searchModel: BookingSearch, token: str = Depends(api_key_header)):
     current_user = get_current_user(token=token)
 
-    print("current_user", current_user)
-
     data = []
     if current_user.is_admin:
         data = booking_crud.get_list(searchModel=searchModel)
@@ -110,11 +108,11 @@ async def booking_list(searchModel: BookingSearch, token: str = Depends(api_key_
 async def booking_get_by_id(id: str, token: str = Depends(api_key_header)):
     current_user = get_current_user(token=token)
     data = booking_crud.get_by_id(id=id)
-    if data.user_id != current_user.id:
+    if data.user_id != current_user.id and current_user.is_admin == False:
         raise HTTPException(status_code=403, detail="Not authorized to access this booking")
 
     return {
-        "data": data,
+        "data": data.model_dump(),
     }
 
 @router.post("/booking/", tags=["booking"])
@@ -128,10 +126,15 @@ async def booking_create(createModel: BookingCreate, token: str = Depends(api_ke
     }
 
 @router.put("/booking/{id}", tags=["booking"])
-async def booking_edit(updateModel: BookingUpdate, id: int, token: str = Depends(api_key_header)):
+async def booking_edit(updateModel: BookingUpdate, id: str, token: str = Depends(api_key_header)):
     current_user = get_current_user(token=token)
     
+    data = booking_crud.get_by_id(id=id)
+    if current_user.is_admin == False and data.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to edit this booking")
+    
     data = booking_crud.update(id=id, update=updateModel)
+    
     return {
         "success": True,
         "data": data
@@ -140,7 +143,7 @@ async def booking_edit(updateModel: BookingUpdate, id: int, token: str = Depends
 @router.delete("/booking/{id}", tags=["booking"])
 async def booking_delete(id: str, token: str = Depends(api_key_header)):
     current_user = get_current_user(token=token)
-    
+
     booking_crud.delete(id=id)
     return {
         "success": True
