@@ -9,10 +9,15 @@ from typing import List, Optional
 from .database import user_crud, booking_crud
 from .schemas import *
 from jose import JWTError, jwt
+from pwdlib import PasswordHash
 from .config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+
+password_hash = PasswordHash.recommended()
 
 api_key_header = APIKeyHeader(name="Authorization") 
 router = APIRouter()
+
+print("password hash example", password_hash.hash("password"))
 
 
 ############## User API ##############
@@ -40,6 +45,7 @@ async def user_get_by_id(id: str):
 
 @router.post("/user/", tags=["user"])
 async def user_create(createModel: UserCreate):
+    createModel.password = get_password_hash(createModel.password)
     data = user_crud.create(createModel=createModel)
     return {
         "data": data,
@@ -71,7 +77,7 @@ async def user_login(userLoginModel: UserLogin):
     """
 
     data = user_crud.get_by_username(userLoginModel.username)
-    if data['password'] != userLoginModel.password:
+    if not verify_password(userLoginModel.password, data['password']):
         raise HTTPException(status_code=400, detail="Invalid password")
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -151,6 +157,13 @@ async def booking_delete(id: str, token: str = Depends(api_key_header)):
 
 
 ##############################################
+
+def verify_password(plain_password, hashed_password):
+    return password_hash.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+    return password_hash.hash(password)
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()

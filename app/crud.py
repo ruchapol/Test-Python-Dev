@@ -18,7 +18,7 @@ class UserCrud:
             {
                 "id": "001",
                 "username": "admin",
-                "password": "password",
+                "password": "$argon2id$v=19$m=65536,t=3,p=4$f+RYIHBOP8/ezW7uNaM6KA$/rxYVs4S5ab19fzLoCW3TkGE4czI/sAx2yBXQWyU/DI",
                 "is_admin": True,
                 "create_at": "2023-01-01T00:00:00"
             },
@@ -26,7 +26,7 @@ class UserCrud:
             {
                 "id": "002",
                 "username": "usertest001",
-                "password": "password",
+                "password": "$argon2id$v=19$m=65536,t=3,p=4$f+RYIHBOP8/ezW7uNaM6KA$/rxYVs4S5ab19fzLoCW3TkGE4czI/sAx2yBXQWyU/DI",
                 "is_admin": False,
                 "create_at": "2023-01-01T00:01:00"
             }
