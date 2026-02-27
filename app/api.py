@@ -22,6 +22,13 @@ async def user_list(searchModel: UserSearch):
         "data": data,
     }
 
+@router.post("/user/")
+async def user_create(createModel: UserCreate):
+    data = user_crud.create(createModel=createModel)
+    return {
+        "data": data,
+    }
+
 @router.put("/user/{id}")
 async def user_edit(updateModel: UserUpdate, id: int):
     data = user_crud.update(id=id, update=updateModel)

@@ -14,18 +14,16 @@ class UserCrud:
     def __init__(self, ): # type: ignore
         self.db = {}
 
-    def create(self, gender_aware_result_data: UserCreate):
-        return ""        
+    def create(self, createModel: UserCreate):
+        id = int(time.time())
+        self.db[id] = createModel.dict()       
+        return id
 
     def get_by_id(self, id: int) -> UserModel:
         return {}
 
     def get_list(self, searchModel: UserSearch) -> List[UserModel]:
-        query = {}
-    
-
-        return []
-        
+        return self.db
     
     def get_all(self) -> List[UserModel]:
 

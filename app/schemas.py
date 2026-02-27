@@ -24,14 +24,15 @@ class UserSearch(BaseModel):
 class UserCreate(BaseModel):
     username: str
     password: str
-    is_admin: bool = False
+    is_admin: bool
     create_at: str = Field(default_factory=get_gmt7_time_str)
 
     class Config:
         json_schema_extra = {
             "example": {
                 "username": "testuser",
-                "password": "testpassword"                
+                "password": "testpassword",    
+                "is_admin": False            
             }            
         }
 
