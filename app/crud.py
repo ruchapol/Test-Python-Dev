@@ -12,7 +12,14 @@ from .model import *
 class UserCrud:
 
     def __init__(self, ): # type: ignore
-        self.db = {}
+        self.db = {"001": 
+            {
+                       "username": "admin",
+                       "password": "admin",
+                       "is_admin": True,
+                       "create_at": "2023-01-01 00:00:00"
+            }
+        }
 
     def create(self, createModel: UserCreate):
         id = int(time.time())
