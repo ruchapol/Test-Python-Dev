@@ -10,6 +10,8 @@ from datetime import datetime
 from typing import List, Optional
 from .database import user_crud
 from .schemas import *
+from jose import JWTError, jwt
+from .config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
   
 router = APIRouter()
@@ -50,7 +52,24 @@ async def user_login(userLoginModel: UserLogin):
     if data['password'] != userLoginModel.password:
         raise HTTPException(status_code=400, detail="Invalid password")
     
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        
+    access_token = create_access_token(
+            data={"username": userLoginModel.username}, expires_delta=access_token_expires
+        )
+
     return {
         "data": data,
-        "accessToken": ""
+        "accessToken": access_token
     }
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
