@@ -17,8 +17,6 @@ password_hash = PasswordHash.recommended()
 api_key_header = APIKeyHeader(name="Authorization") 
 router = APIRouter()
 
-print("password hash example", password_hash.hash("password"))
-
 
 ############## User API ##############
 

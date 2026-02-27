@@ -8,12 +8,11 @@ from fastapi import APIRouter, HTTPException
 from .schemas import *
 from .model import *
 
-# from app.dependencies import get_db
 
 
 class UserCrud:
 
-    def __init__(self, ): # type: ignore
+    def __init__(self, ):
         self.db = {"001": 
             {
                 "id": "001",
@@ -89,7 +88,7 @@ class UserCrud:
 
 class BookingCrud:
 
-    def __init__(self, ): # type: ignore
+    def __init__(self, ): 
         self.db = self.db = {"0001": 
             {
                 "id": "0001",
